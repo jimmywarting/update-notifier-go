@@ -4,12 +4,10 @@
  * @param {string} name The name of the module.
  * @param {string} version The version of the module.
  */
-export async function updateNotifier (name, version) {
-  if (!globalThis.fetch) return
-
-  fetch('https://registry.npmjs.org/' + name)
+export function updateNotifier (name, version) {
+  return globalThis.fetch ? fetch('https://registry.npmjs.org/' + name)
     .then(res => res.json())
-    .then(async json => {
+    .then(json => {
       const latest = json['dist-tags'].latest.split('-')[0]
 
       if (latest.localeCompare(version, 'en', { numeric: true }) === 1) {
@@ -19,5 +17,5 @@ export async function updateNotifier (name, version) {
         )
       }
     })
-    .catch(() => { })
+    .catch(() => { }) : void 0
 }
